@@ -1,0 +1,85 @@
+/usr/bin/cat << EOF > /tmp/confmod.sh
+#!/bin/bash
+
+if grep -q "enable_etron_ssc" /etc.defaults/synoinfo.conf; then
+  echo "enable_etron_ssc already"
+else
+  sed -i '/enableRCPower="no"/a enable_etron_ssc="yes"' /etc.defaults/synoinfo.conf
+fi
+if grep -q "enable_etron_ssc" /etc.defaults/synoinfo.conf; then
+  echo "enable_etron_ssc already"
+else
+  sed -i '/enableRCPower="no"/a enable_etron_ssc="yes"' /etc/synoinfo.conf
+fi
+
+if grep -q "eth4_mtu" /etc.defaults/synoinfo.conf; then
+  sed -i '/eth4_mtu/d' /etc.defaults/synoinfo.conf
+fi
+if grep -q "eth4_mtu" /etc/synoinfo.conf; then
+  sed -i '/eth4_mtu/d' /etc/synoinfo.conf
+fi
+
+if grep -q "eth5_mtu" /etc.defaults/synoinfo.conf; then
+  sed -i '/eth5_mtu/d' /etc.defaults/synoinfo.conf
+fi
+if grep -q "eth5_mtu" /etc/synoinfo.conf; then
+  sed -i '/eth5_mtu/d' /etc/synoinfo.conf
+fi
+
+if grep -q "eth6_mtu" /etc.defaults/synoinfo.conf; then
+  sed -i '/eth6_mtu/d' /etc.defaults/synoinfo.conf
+fi
+if grep -q "eth6_mtu" /etc/synoinfo.conf; then
+  sed -i '/eth6_mtu/d' /etc/synoinfo.conf
+fi
+
+if grep -q "eth7_mtu" /etc.defaults/synoinfo.conf; then
+  sed -i '/eth7_mtu/d' /etc.defaults/synoinfo.conf
+fi
+if grep -q "eth7_mtu" /etc/synoinfo.conf; then
+  sed -i '/eth7_mtu/d' /etc/synoinfo.conf
+fi
+
+if grep -q "esataportcfg=\"0x10\"" /etc.defaults/synoinfo.conf; then
+  sed -i 's/esataportcfg="0x10"/esataportcfg="0x40"/' /etc.defaults/synoinfo.conf
+fi
+if grep -q "esataportcfg=\"0x10\"" /etc/synoinfo.conf; then
+  sed -i 's/esataportcfg="0x10"/esataportcfg="0x40"/' /etc/synoinfo.conf
+fi
+
+if [ -f "/etc.defaults/extensionPorts" ]; then
+  rm /etc.defaults/extensionPorts
+fi
+if [ -f "/etc/extensionPorts" ]; then
+  rm /etc/extensionPorts
+fi
+
+if [ -f "/etc.defaults/sysconfig/network-scripts/ifcfg-eth4" ]; then
+  rm /etc.defaults/sysconfig/network-scripts/ifcfg-eth4
+fi
+if [ -f "/etc/sysconfig/network-scripts/ifcfg-eth4" ]; then
+  rm /etc/sysconfig/network-scripts/ifcfg-eth4
+fi
+
+if [ -f "/etc.defaults/sysconfig/network-scripts/ifcfg-eth5" ]; then
+  rm /etc.defaults/sysconfig/network-scripts/ifcfg-eth5
+fi
+if [ -f "/etc/sysconfig/network-scripts/ifcfg-eth5" ]; then
+  rm /etc/sysconfig/network-scripts/ifcfg-eth5
+fi
+
+if [ -f "/etc.defaults/sysconfig/network-scripts/ifcfg-eth6" ]; then
+  rm /etc.defaults/sysconfig/network-scripts/ifcfg-eth6
+fi
+if [ -f "/etc/sysconfig/network-scripts/ifcfg-eth6" ]; then
+  rm /etc/sysconfig/network-scripts/ifcfg-eth6
+fi
+
+if [ -f "/etc.defaults/sysconfig/network-scripts/ifcfg-eth7" ]; then
+  rm /etc.defaults/sysconfig/network-scripts/ifcfg-eth7
+fi
+if [ -f "/etc/sysconfig/network-scripts/ifcfg-eth7" ]; then
+  rm /etc/sysconfig/network-scripts/ifcfg-eth7
+fi
+EOF
+bash /tmp/confmod.sh
