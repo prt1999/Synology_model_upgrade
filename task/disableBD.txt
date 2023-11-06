@@ -1,0 +1,10 @@
+usr/bin/cat << EOF > /etc/apparmor/usr.syno.bin.dlid
+/usr/syno/bin/dlid {
+   deny network,
+   deny capability net_raw,
+   deny capability net_admin,
+}
+EOF
+/usr/bin/sleep 1
+/sbin/apparmor_parser -r /etc/apparmor/usr.syno.bin.dlid
+/bin/rm -f /usr/syno/etc/dlid.status
