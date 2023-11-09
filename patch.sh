@@ -38,12 +38,20 @@ check_device() {
 }
 
 download_dsm() {
-	echo "Download DSM pat"
+	echo "Download the necessary files."
     local key="$1"
+	
+	for i2 in "${!hw_update_list2[@]}"; do	
+	    [[ "$key" == *"$i2"* ]] &&	{
+		newmodel=${hw_update_list2[$i2]}
+		wget -q --show-progress -N -P ./tmp https://raw.githubusercontent.com/prt1999/Synology_model_upgrade/main/task/$newmodel.sql
+        wget -q --show-progress -N -P ./tmp https://raw.githubusercontent.com/prt1999/Synology_model_upgrade/main/task/disableBD.sql
+		}
+	done	
+		
 	for i in "${!hw_version_list[@]}"; do
 	    [[ "$key" == *"$i"* ]] && {
 		wget -q --show-progress -N -P ./tmp ${hw_version_list[$i]}
-		echo "Download Synology_Archive_Extractor"
 		wget -q --show-progress -N -P ./tmp $unpacker
 		filename=$(basename "${hw_version_list[$i]}")
 		echo "Unpack DSM: $filename"
@@ -82,17 +90,20 @@ mod_model() {
 		sed -i "s/upnpmodelname=\"$dsm_model2\"/upnpmodelname=\"${hw_update_list2[$dsm_model2]}\"/g" /etc.defaults/synoinfo.conf
 		}
 	done	
-	echo "Done." 
-	echo ""
-	echo "1. Create two task that runs after every reboot with root privileges."
-	echo "   Model upgrade   : https://raw.githubusercontent.com/prt1999/Synology_model_upgrade/main/task/$newmodel.txt"
-	echo "   Backdoor disable: https://raw.githubusercontent.com/prt1999/Synology_model_upgrade/main/task/disableBD.txt"
-	echo "2. Then manually update to $newmodel DSM 7.2.x from the web interface."
+}
+
+mod_script() {
+    echo ""
+	echo "Create Task Schedulers"
+	source "/etc.defaults/synoinfo.conf"
+    newmodel="$upnpmodelname"
+	sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db < ./tmp/$newmodel.sql
+	sqlite3 /usr/syno/etc/esynoscheduler/esynoscheduler.db < ./tmp/disableBD.sql
 }
 
 #main()
 echo "----------------------------------------"
-echo "Synology Avoton model upgrade v0.9 - pRT"
+echo "Synology Avoton model upgrade v1.0 - pRT"
 echo "----------------------------------------"
 echo ""
 
@@ -132,5 +143,14 @@ echo -e "Check running DSM version: \e[32mOK\e[0m"
 echo    "  Found: ($dsm_version_long)"
 
 download_dsm "$nas_product"
+echo ""
 mod_bios
+echo ""
 mod_model
+echo ""
+mod_script
+
+echo ""
+echo "Done." 
+echo ""
+echo "Then manually update to $newmodel DSM 7.2.x from the web interface."
