@@ -10,11 +10,5 @@ Usage:
 
    <p align="leftr"><img src="pic/0.png"></p>
 
- 4. Create a task that runs after every reboot with root privileges.
-    This script will check the synoinfo.conf file on every boot and the rewrite the necessary values if necessary.
-       <p align="leftr"><img src="pic/1.png"></p>
-       <p align="leftr"><img src="pic/2.png"></p>
-       <p align="leftr"><img src="pic/3.png"></p>
-
- 5. Then manually update to DMS 7.2.1 from the web interface using the DSM_DS1517+_69057.pat file.
+ 4. Then manually update to DMS 7.2.1 from the web interface using the DSM_DS1517+_69057.pat file.
       <p align="leftr"><img src="pic/4.png"></p>
